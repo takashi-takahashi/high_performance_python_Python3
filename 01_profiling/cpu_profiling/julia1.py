@@ -1,5 +1,7 @@
 # coding=utf-8
 import time
+import functools
+
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.cm as cm
@@ -9,6 +11,18 @@ x1, x2, y1, y2 = -1.8, 1.8, -1.8, 1.8
 c_real, c_imag = -0.62772, -0.42193
 
 
+def timefn(func):
+    @functools.wraps(func)
+    def measure_time(*args, **kwargs):
+        t1 = time.time()
+        result = func(*args, **kwargs)
+        t2 = time.time()
+        print("@timefn:", func.__name__, "took", t2 - t1, "secnods")
+        return result
+
+    return measure_time
+
+@timefn
 def plot_output(output, title="", xlabel="", ylabel=""):
     """plot iteration number in gray scale
 
@@ -94,4 +108,4 @@ def calc_pure_python(desired_width, max_iterations):
 
 
 if __name__ == '__main__':
-    calc_pure_python(desired_width=10000, max_iterations=300)
+    calc_pure_python(desired_width=1000, max_iterations=300)
